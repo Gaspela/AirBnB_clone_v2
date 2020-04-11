@@ -2,10 +2,20 @@
 """Fabric script"""
 from fabric.api import *
 from os.path import isfile
+from datetime import datetime
 
 env.hosts = ["34.73.95.63", "54.242.72.84"]
 env.user = "ubuntu"
 env.key_filename = "~/.ssh/id_rsa"
+
+
+def do_pack():
+    """Create tarball """
+    local("sudo mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    file = ("versions/web_static_{}.tgz").format(date)
+    local("sudo tar -cvzf {} web_static".format(file))
+    return file
 
 
 def do_deploy(archive_path):
@@ -29,3 +39,11 @@ def do_deploy(archive_path):
         return True
     except:
         return False
+
+
+def deploy():
+    """ Full stack """
+    archive_path = do_pack()
+    if archive_path is None:
+        return False
+    return do_deploy(archive_path)
