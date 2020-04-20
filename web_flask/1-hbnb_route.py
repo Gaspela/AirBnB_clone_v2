@@ -13,7 +13,7 @@ def home():
 
 
 @app.route('/hbnb')
-def home():
+def hbnb():
     ''' Return page. '''
     return "HBNB"
 
