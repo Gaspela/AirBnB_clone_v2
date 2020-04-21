@@ -33,12 +33,10 @@ def python(text='is cool'):
     return "Python " + text
 
 
-@app.route('/number/<n>')
+@app.route('/number/<int:n>', strict_slashes=False)
 def number(n):
     ''' Return number page data. '''
-    if n.isdigit():
-        return n + " is a number"
-    abort(404)
+    return '{} is a number'.format(n)
 
 if __name__ == '__main__':
     app.run()
