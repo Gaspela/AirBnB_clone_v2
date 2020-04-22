@@ -73,6 +73,5 @@ class FileStorage:
                 break
 
     def close(self):
-        """ calls reload()
-        """
+        """Deserialize  the JSON file to objects"""
         self.reload()
