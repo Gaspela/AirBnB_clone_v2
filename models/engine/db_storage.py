@@ -33,19 +33,22 @@ class DBStorage():
             Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
-        """ Returns a dictionary of __object """
+        """Returns a dictionary of __object
+        """
         dict_return = {}
-        if cls is None:
-            for table in [City, State, User, Place, Amenity, Review]:
-                for instance in self.__session.query(table).all():
-                    dict_return["{}.{}".format(
-                       table, instance.id)] = instance
-
+        if cls:
+            cls = eval(cls) if type(cls) == str else cls
+            objs = self.__session.query(cls).all()
         else:
-            for instance in self.__session.query(eval(cls)).all():
-                dict_return["{}.{}".format(
-                    eval(cls).__name__, instance.id)] = instance
-
+            objs = self.__session.query(State).all()
+            objs.extend(self.__session.query(City).all())
+            objs.extend(self.__session.query(User).all())
+            objs.extend(self.__session.query(Amenity).all())
+            objs.extend(self.__session.query(Place).all())
+            objs.extend(self.__session.query(Review).all())
+        for obj in objs:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            dict_return[key] = obj
         return dict_return
 
     def new(self, obj):
