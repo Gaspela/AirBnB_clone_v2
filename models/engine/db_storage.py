@@ -34,20 +34,17 @@ class DBStorage():
 
     def all(self, cls=None):
         """ Returns a dictionary of __object """
-
-        classes = ["State", "City", "User", "Place", "Review", "Amenity"]
         dict_return = {}
-
         if cls is None:
-            for table_name in classes:
-                for table in self.__session.query(eval(table_name)).all():
-                    info = type(table).__name__
-                    dict_return["{}.{}".format(info, table.id)] = table
+            for table in [City, State, User, Place, Amenity, Review]:
+                for instance in self.__session.query(table).all():
+                    dict_return["{}.{}".format(
+                       table, instance.id)] = instance
+
         else:
-            for table in self.__session.query(eval(cls)).all():
-                info = type(table).__name__
-                dict_return["{}.{}".format(info,
-                            table.id)] = table
+            for instance in self.__session.query(eval(cls)).all():
+                dict_return["{}.{}".format(
+                    eval(cls).__name__, instance.id)] = instance
 
         return dict_return
 
